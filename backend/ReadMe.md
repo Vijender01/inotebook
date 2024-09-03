@@ -3,3 +3,11 @@ npm i Express
 npm i mongoose
 
 install thunder client on VS Code
+
+--to run the application
+nodemon ./index.js
+
+
+install bcryptjs----
+npm i bcryptjs
+
