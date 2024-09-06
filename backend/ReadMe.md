@@ -11,3 +11,8 @@ nodemon ./index.js
 install bcryptjs----
 npm i bcryptjs
 
+concurrent---- is used to run both server of backend and frontend at the same time...
+run>>>>>>> npm run both----------- on inotebook repo...
+
+
+
