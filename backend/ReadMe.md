@@ -15,4 +15,5 @@ concurrent---- is used to run both server of backend and frontend at the same ti
 run>>>>>>> npm run both----------- on inotebook repo...
 
 
+we are using context API in this project in which we can access the context object from the context object passed in the constructor function below and access the context object from the context object passed in the constructor function.
 
