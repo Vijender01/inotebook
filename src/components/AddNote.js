@@ -8,6 +8,8 @@ function AddNote() {
 
     const handleClick = (e) => {
         e.preventDefault();
+        console.log(note.title,note.description,note.tag);
+        
         addNote(note.title,note.description,note.tag);
     }
     const onChange=(e)=>{
@@ -26,9 +28,9 @@ function AddNote() {
                     <label htmlFor="description" className="form-label">Description</label>
                     <input type="text" className="form-control" id="description" name='description' onChange={onChange} />
                 </div>
-                <div className="mb-3 form-check">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1" onChange={onChange} />
-                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+                <div className='mb-3'>
+                    <label htmlFor="tag" class="form-label">Tag</label>
+                    <input type="text" className="form-control" id="tag" name='tag' onChange={onChange}/>
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handleClick}>Submit</button>
             </form>

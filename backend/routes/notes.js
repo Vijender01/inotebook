@@ -17,12 +17,13 @@ router.get('/fetchallnotes', fetchuser, async (req, res) => {
 })
 
 //ROUTE:2 Add new note using: POST "/api/notes/addnote"
-router.get('/addnote', fetchuser, [
+router.post('/addnote', fetchuser, [
     body('title', 'Enter a valid note title').isLength({ min: 3 }),
     body('description', 'Description must be atleast 5 characters').isLength({ min: 5 }),
 ], async (req, res) => {
     try {
-
+        console.log('Vijenders Body',req.body);
+        
         const { title, description, tag } = req.body;
 
         const newNote = new Notes({
