@@ -5,7 +5,7 @@ const About = () => {
     const a = useContext(noteContext)
     return (
         <div>
-            I am in about {a.name} and he is in class {a.class}
+            About Section
         </div>
     )
 }

@@ -16,14 +16,15 @@ router.post('/createuser', [
     body('email').isEmail().withMessage('Invalid email'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
 ], async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ success, errors: errors.array() });
     }
     try {
-        let user = await User.findOne({ email: req.body.email });
+        let user = await User.findOne({ success, email: req.body.email });
         if (user) {
-            return res.status(400).json({ errors: [{ msg: 'User already exists' }] })
+            return res.status(400).json({ success, errors: [{ msg: 'User already exists' }] })
         }
         // create user
         const salt = await bcrypt.genSalt(10);
@@ -43,7 +44,8 @@ router.post('/createuser', [
             }
         };
         const authtoken = await jwt.sign(data, JWT_Secret)
-        res.json({ authtoken })
+        success = true;
+        res.json({ success, authtoken })
     } catch (e) {
         console.error(e.message)
     }
@@ -52,26 +54,28 @@ router.post('/createuser', [
 
 //Authenticate a user using: POST "/api/auth/login". No login required
 //ROUTE:2
-router.get('/login', [
+router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password cannot be blank').exists(),
 ], async (req, res) => {
-
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({success, errors: errors.array() });
     }
 
     const { email, password } = req.body;
     try {
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ errors: [{ msg: 'User not found' }] })
+            success = false;
+            return res.status(400).json({success, errors: [{ msg: 'User not found' }] })
         }
 
         const passwordCompare = await bcrypt.compare(password, user.password);
         if (!passwordCompare) {
-            return res.status(400).json({ error: "User not found" });
+            success = false;
+            return res.status(400).json({success, error: "User not found" });
         }
         //adding the data in token
         const data = {
@@ -81,9 +85,10 @@ router.get('/login', [
                 email: user.email
             }
         };
-        const authtoken = await jwt.sign(data, JWT_Secret)
-
-        res.json({ authtoken })
+        const authtoken = await jwt.sign(data, JWT_Secret);
+        success = true;
+        res.json({success, authtoken })
+        //Check if user exists
     } catch (e) {
         console.error(e.message)
         return res.status(500).json({ msg: 'Server error' })

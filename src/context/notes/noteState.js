@@ -13,7 +13,7 @@ const NoteState = (props) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkNmFlMGM3ZjE2OWEzYTg5MzViOTFhIiwibmFtZSI6ImdhNzNyNTdnIiwiZW1haWwiOiJnYXI3NDY1ZEBnbWFpbC5jb20ifSwiaWF0IjoxNzI2NjM1NDMxfQ.eYXJNHiUgRQ3Kf6pAQkVhtpgPILnvhyQWcOxI75Ot-I'
+          'auth-token': localStorage.getItem('token'),
         },
       });
       const json = await response.json();
@@ -30,7 +30,7 @@ const NoteState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkNmFlMGM3ZjE2OWEzYTg5MzViOTFhIiwibmFtZSI6ImdhNzNyNTdnIiwiZW1haWwiOiJnYXI3NDY1ZEBnbWFpbC5jb20ifSwiaWF0IjoxNzI1NjA0Nzk0fQ.5HxDqsJLH25ry8seIv2r8ldSUsTkZV2wNVqwHLi4-b8'
+        'auth-token': localStorage.getItem('token')
       },
       body: JSON.stringify({title, description, tag}),
     });
@@ -56,7 +56,7 @@ const NoteState = (props) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkNmFlMGM3ZjE2OWEzYTg5MzViOTFhIiwibmFtZSI6ImdhNzNyNTdnIiwiZW1haWwiOiJnYXI3NDY1ZEBnbWFpbC5jb20ifSwiaWF0IjoxNzI2NjM1NDMxfQ.eYXJNHiUgRQ3Kf6pAQkVhtpgPILnvhyQWcOxI75Ot-I'
+        'auth-token': localStorage.getItem('token')
       },
     });
     const json = response.json();
@@ -72,26 +72,31 @@ const NoteState = (props) => {
   }
   //Edit a note
   const EditNote =async (id, title, description, tag) => {
-
     let response =await fetch(`${host}/api/notes/editnote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkNmFlMGM3ZjE2OWEzYTg5MzViOTFhIiwibmFtZSI6ImdhNzNyNTdnIiwiZW1haWwiOiJnYXI3NDY1ZEBnbWFpbC5jb20ifSwiaWF0IjoxNzI2NjM1NDMxfQ.eYXJNHiUgRQ3Kf6pAQkVhtpgPILnvhyQWcOxI75Ot-I'
+        'auth-token': localStorage.getItem('token')
       },
-      body: JSON.stringify(id,title,description,tag),
+      body: JSON.stringify({title,description,tag}),
     });
     // eslint-disable-next-line
-    const json = response.json();
+    const json = await response.json();
+    console.log(json);
+    
+    let newNotes= JSON.parse(JSON.stringify(notes));
 
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+    for (let index = 0; index < newNotes.length; index++) {
+      const element = newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
     }
+    
+    setNotes(newNotes);
   }
 
   return (
